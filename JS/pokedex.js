@@ -7,8 +7,22 @@ function fetchPokemon(){
         if (res.status != "200"){
             console.log(res);
             pokeImage("./assets/poke404.png");
+            pokeName("");
+            pokeId("");
+            pokeType("");
+            document.getElementById("pokeStats").textContent = "";
+            document.getElementById("pokeMoves").textContent = "";
+            document.getElementById("imgNum").style = "display: none;" ;
         } else if(pokeInput == ""){
+            // PROBAR CON TRY Y CATCH PARA ERRORES
             pokeImage("./assets/poke404.png");
+            pokeName("");
+            pokeId("");
+            pokeType("");
+            document.getElementById("pokeStats").textContent = "";
+            document.getElementById("pokeMoves").textContent = "";
+            return;
+
         } else {
             return res.json();
         }
@@ -21,15 +35,30 @@ function fetchPokemon(){
         let dataStats = data.stats.map(function ({ base_stat, stat }) {
                 return `${stat.name}: ${base_stat}`;
             });
-        let dataMoves = data.moves.map(function({move}){
-                return move.name;
+        const dataMoves = data.moves.map(function({move}){
+                return `${move.name}`;
             });
+            console.log(dataMoves);
         pokeName(dataName.toUpperCase());
         pokeImage(dataImg);
         pokeId(dataId);
         pokeType(dataType);
-        pokeStats(dataStats);
-        pokeMoves(dataMoves);
+        //pokeStats(dataStats);
+        let stats = "";
+        dataStats.forEach(pokeStats);
+
+        document.getElementById("pokeStats").textContent = stats;
+        function pokeStats(stat){
+            stats += `${stat} \n`
+        }
+        // pokeMoves(dataMoves);
+        let moves = "";
+        dataMoves.forEach(pokeMoves);
+        
+        document.getElementById("pokeMoves").textContent = moves;
+        function pokeMoves(move){
+            moves += `${move} \n`; 
+        }
     });
 }
 
@@ -43,17 +72,11 @@ function pokeImage(url){
 }
 function pokeId(num){
     const pokeNum = document.getElementById("pokeId")
-    pokeNum.textContent = num;
+    let imgNum = document.getElementById("imgNum");
+    imgNum.style.display="";
+    pokeNum.textContent =  num;
 }
 function pokeType(type){
     const pokeType = document.getElementById("pokeType");
     pokeType.textContent = type;
-}
-function pokeStats(stats){
-    const pokeStats = document.getElementById("pokeStats");
-    pokeStats.textContent = stats;
-}
-function pokeMoves(move){
-    const pokeMoves = document.getElementById("pokeMoves");
-        pokeMoves.textContent = move;
 }
